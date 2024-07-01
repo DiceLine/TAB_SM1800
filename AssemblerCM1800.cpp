@@ -572,7 +572,6 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 	}
 	length = clearedAsmCode.length();
 	
-
 	wstring command;
 	
 	bool firstToken = false, secondToken = false;
@@ -586,18 +585,10 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 	int labelsIter = 0, labelsSizeCoef = 1;
 	labels = vector<Label>(INSTR_QUANTITY * labelsSizeCoef);
 
-	// Анализ потенциальных инструкций на совпадение c мнемониками
-	// Построение полного формата инструкции
-	// Определение ошибок
-	// Анализ начального адреса и набора меток
+	// Анализ текста на метки. Определение корректности. Сохранение меток.
 	while (i + len <= length) {
 		switch (clearedAsmCode[i + len])
 		{
-			case L'{':
-			case L'}': {
-				++i;
-				break;
-			}
 			case L':': {
 				if (len == 0) {
 					bufMsg =
@@ -636,6 +627,52 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					break;
 				}
 
+				labels[labelsIter].value = startAddress + rltIter;
+				labels[labelsIter++].text = bufS1;
+
+				i += len + 1;
+				len = 0;
+				break;
+			}
+			case L'\n':
+			case L' ':
+			case L'{':
+			case L'}': {
+				++i;
+				len = 0;
+				break;
+			}
+			default: {
+				++len;
+				break;
+			}
+		}
+	}
+
+	// Анализ потенциальных инструкций на совпадение c мнемониками
+	// Построение полного формата инструкции
+	// Определение ошибок
+	// Анализ начального адреса
+	i = 0; len = 0;
+	while (i + len <= length) {
+		switch (clearedAsmCode[i + len])
+		{
+			case L'{':
+			case L'}': {
+				if (len != 0) {
+					bufMsg =
+						string_format(L"Ошибка ввода: Операторы блока должны быть отделены от остального текста: Код(стр. %lld): %ls",
+							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
+					setError(bufMsg, hadErrorCode);
+					++i;
+					break;
+				}
+				++i;
+				break;
+			}
+			case L':': {
+				
+				bufS1 = clearedAsmCode.substr(i, len);
 				if (firstToken) {
 					bufMsg =
 						string_format(L"Ошибка последовательности: Метка должна быть перед инструкцией: Код(стр. %lld): %ls",
@@ -645,9 +682,6 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					break;
 				}
 				
-				labels[labelsIter].value = startAddress + rltIter;
-				labels[labelsIter++].text = bufS1;
-
 				i += len + 1;
 				len = 0;
 				break;
