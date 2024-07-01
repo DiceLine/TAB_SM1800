@@ -1,0 +1,79 @@
+﻿  asmToBytes.cpp
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp__invalid_parameter в функции "void * __cdecl std::_Allocate_manually_vector_aligned<struct std::_Default_allocate_traits>(unsigned __int64)" (??$_Allocate_manually_vector_aligned@U_Default_allocate_traits@std@@@std@@YAPEAX_K@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp__CrtDbgReport в функции "void * __cdecl std::_Allocate_manually_vector_aligned<struct std::_Default_allocate_traits>(unsigned __int64)" (??$_Allocate_manually_vector_aligned@U_Default_allocate_traits@std@@@std@@YAPEAX_K@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_free в функции main.
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_atol в функции "public: char const * __cdecl AssemblerCM1800::assemble(void)" (?assemble@AssemblerCM1800@@QEAAPEBDXZ).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp__get_stream_buffer_pointers в функции "protected: void __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::_Init(struct _iobuf *,enum std::basic_filebuf<char,struct std::char_traits<char> >::_Initfl)" (?_Init@?$basic_filebuf@DU?$char_traits@D@std@@@std@@IEAAXPEAU_iobuf@@W4_Initfl@12@@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fclose в функции "public: class std::basic_filebuf<char,struct std::char_traits<char> > * __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::close(void)" (?close@?$basic_filebuf@DU?$char_traits@D@std@@@std@@QEAAPEAV12@XZ).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fflush в функции "protected: virtual int __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::sync(void)" (?sync@?$basic_filebuf@DU?$char_traits@D@std@@@std@@MEAAHXZ).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fgetc в функции "bool __cdecl std::_Fgetc<char>(char &,struct _iobuf *)" (??$_Fgetc@D@std@@YA_NAEADPEAU_iobuf@@@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fgetpos в функции "protected: virtual class std::fpos<struct _Mbstatet> __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::seekoff(__int64,int,int)" (?seekoff@?$basic_filebuf@DU?$char_traits@D@std@@@std@@MEAA?AV?$fpos@U_Mbstatet@@@2@_JHH@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fputc в функции "bool __cdecl std::_Fputc<char>(char,struct _iobuf *)" (??$_Fputc@D@std@@YA_NDPEAU_iobuf@@@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fread в функции "protected: virtual __int64 __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::xsgetn(char *,__int64)" (?xsgetn@?$basic_filebuf@DU?$char_traits@D@std@@@std@@MEAA_JPEAD_J@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fsetpos в функции "protected: virtual class std::fpos<struct _Mbstatet> __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::seekpos(class std::fpos<struct _Mbstatet>,int)" (?seekpos@?$basic_filebuf@DU?$char_traits@D@std@@@std@@MEAA?AV?$fpos@U_Mbstatet@@@2@V32@H@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp__fseeki64 в функции "protected: virtual class std::fpos<struct _Mbstatet> __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::seekoff(__int64,int,int)" (?seekoff@?$basic_filebuf@DU?$char_traits@D@std@@@std@@MEAA?AV?$fpos@U_Mbstatet@@@2@_JHH@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_fwrite в функции "protected: bool __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::_Endwrite(void)" (?_Endwrite@?$basic_filebuf@DU?$char_traits@D@std@@@std@@IEAA_NXZ).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_setvbuf в функции "protected: virtual class std::basic_streambuf<char,struct std::char_traits<char> > * __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::setbuf(char *,__int64)" (?setbuf@?$basic_filebuf@DU?$char_traits@D@std@@@std@@MEAAPEAV?$basic_streambuf@DU?$char_traits@D@std@@@2@PEAD_J@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_ungetc в функции "bool __cdecl std::_Ungetc<char>(char const &,struct _iobuf *)" (??$_Ungetc@D@std@@YA_NAEBDPEAU_iobuf@@@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp__lock_file в функции "public: virtual void __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::_Lock(void)" (?_Lock@?$basic_filebuf@DU?$char_traits@D@std@@@std@@UEAAXXZ).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp__unlock_file в функции "public: virtual void __cdecl std::basic_filebuf<char,struct std::char_traits<char> >::_Unlock(void)" (?_Unlock@?$basic_filebuf@DU?$char_traits@D@std@@@std@@UEAAXXZ).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp___stdio_common_vsprintf в функции vsnprintf.
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ memcmp в функции "public: static int __cdecl std::_Narrow_char_traits<char,int>::compare(char const * const,char const * const,unsigned __int64)" (?compare@?$_Narrow_char_traits@DH@std@@SAHQEBD0_K@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ memcpy в функции "private: void __cdecl std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::_Memcpy_val_from(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?_Memcpy_val_from@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEAAXAEBV12@@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ memmove в функции "public: static char * __cdecl std::_Char_traits<char,int>::move(char * const,char const * const,unsigned __int64)" (?move@?$_Char_traits@DH@std@@SAPEADQEADQEBD_K@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_wcslen в функции "public: static unsigned __int64 __cdecl std::_WChar_traits<wchar_t>::length(wchar_t const *)" (?length@?$_WChar_traits@_W@std@@SA_KPEB_W@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_strcpy_s в функции main.
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ strlen в функции "class std::basic_ostream<wchar_t,struct std::char_traits<wchar_t> > & __cdecl std::operator<<<wchar_t,struct std::char_traits<wchar_t> >(class std::basic_ostream<wchar_t,struct std::char_traits<wchar_t> > &,char const *)" (??$?6_WU?$char_traits@_W@std@@@std@@YAAEAV?$basic_ostream@_WU?$char_traits@_W@std@@@0@AEAV10@PEBD@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __std_exception_copy в функции "public: __cdecl std::exception::exception(class std::exception const &)" (??0exception@std@@QEAA@AEBV01@@Z).
+MSVCRTD.lib(throw_bad_alloc.obj) : error LNK2001: неразрешенный внешний символ __std_exception_copy.
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __std_exception_destroy в функции "public: virtual __cdecl std::exception::~exception(void)" (??1exception@std@@UEAA@XZ).
+MSVCRTD.lib(throw_bad_alloc.obj) : error LNK2001: неразрешенный внешний символ __std_exception_destroy.
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_toupper в функции "public: __cdecl `class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl str_toupper(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)'::`2'::<lambda_1>::operator()(unsigned char)const " (??R<lambda_1>@?1??str_toupper@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V23@@Z@QEBA@E@Z).
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ __imp_setlocale в функции main.
+asmToBytes.obj : error LNK2019: ссылка на неразрешенный внешний символ _CxxThrowException в функции "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl string_format<int>(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,int)" (??$string_format@H@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBV01@H@Z).
+MSVCRTD.lib(throw_bad_alloc.obj) : error LNK2001: неразрешенный внешний символ _CxxThrowException.
+asmToBytes.obj : error LNK2001: неразрешенный внешний символ __CxxFrameHandler4.
+msvcprtd.lib(locale0_implib.obj) : error LNK2001: неразрешенный внешний символ __CxxFrameHandler4.
+MSVCRTD.lib(gshandlereh4.obj) : error LNK2001: неразрешенный внешний символ __CxxFrameHandler4.
+msvcprtd.lib(locale0_implib.obj) : error LNK2019: ссылка на неразрешенный внешний символ __imp__free_dbg в функции "public: static void __cdecl std::_Fac_node::operator delete(void *)" (??3_Fac_node@std@@SAXPEAX@Z).
+msvcprtd.lib(locale0_implib.obj) : error LNK2019: ссылка на неразрешенный внешний символ __imp__malloc_dbg в функции "public: static void * __cdecl std::_Fac_node::operator new(unsigned __int64)" (??2_Fac_node@std@@SAPEAX_K@Z).
+MSVCRTD.lib(new_scalar.obj) : error LNK2019: ссылка на неразрешенный внешний символ _callnewh в функции "void * __cdecl operator new(unsigned __int64)" (??2@YAPEAX_K@Z).
+MSVCRTD.lib(new_scalar.obj) : error LNK2019: ссылка на неразрешенный внешний символ malloc в функции "void * __cdecl operator new(unsigned __int64)" (??2@YAPEAX_K@Z).
+MSVCRTD.lib(init.obj) : error LNK2019: ссылка на неразрешенный внешний символ _CrtDbgReport в функции _CRT_RTC_INIT.
+MSVCRTD.lib(init.obj) : error LNK2019: ссылка на неразрешенный внешний символ _CrtDbgReportW в функции _CRT_RTC_INITW.
+MSVCRTD.lib(error.obj) : error LNK2019: ссылка на неразрешенный внешний символ strcpy_s в функции "void __cdecl _RTC_StackFailure(void *,char const *)" (?_RTC_StackFailure@@YAXPEAXPEBD@Z).
+MSVCRTD.lib(error.obj) : error LNK2019: ссылка на неразрешенный внешний символ strcat_s в функции "void __cdecl _RTC_StackFailure(void *,char const *)" (?_RTC_StackFailure@@YAXPEAXPEBD@Z).
+MSVCRTD.lib(error.obj) : error LNK2019: ссылка на неразрешенный внешний символ __stdio_common_vsprintf_s в функции _vsprintf_s_l.
+MSVCRTD.lib(error.obj) : error LNK2001: неразрешенный внешний символ __C_specific_handler_noexcept.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_initialize в функции __scrt_initialize_crt.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_uninitialize в функции __scrt_initialize_crt.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_uninitialize_critical в функции __scrt_dllmain_uninitialize_critical.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_thread_attach в функции __scrt_dllmain_crt_thread_attach.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_thread_detach в функции __scrt_dllmain_crt_thread_attach.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _seh_filter_dll в функции __scrt_dllmain_exception_filter.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _is_c_termination_complete в функции __scrt_dllmain_uninitialize_c.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _configure_narrow_argv в функции "public: static int __cdecl __scrt_narrow_argv_policy::configure_argv(void)" (?configure_argv@__scrt_narrow_argv_policy@@SAHXZ).
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _initialize_narrow_environment в функции "public: static int __cdecl __scrt_narrow_environment_policy::initialize_environment(void)" (?initialize_environment@__scrt_narrow_environment_policy@@SAHXZ).
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _initialize_onexit_table в функции __scrt_initialize_onexit_tables.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _register_onexit_function в функции _onexit.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _execute_onexit_table в функции __scrt_dllmain_uninitialize_c.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _crt_atexit в функции _onexit.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _crt_at_quick_exit в функции at_quick_exit.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __acrt_initialize в функции __scrt_initialize_crt.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __acrt_uninitialize в функции __scrt_uninitialize_crt.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __acrt_uninitialize_critical в функции __scrt_dllmain_uninitialize_critical.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __acrt_thread_attach в функции __scrt_dllmain_crt_thread_attach.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ __acrt_thread_detach в функции __scrt_dllmain_crt_thread_detach.
+MSVCRTD.lib(utility.obj) : error LNK2019: ссылка на неразрешенный внешний символ _cexit в функции __scrt_dllmain_uninitialize_c.
+MSVCRTD.lib(utility.obj) : error LNK2001: неразрешенный внешний символ __C_specific_handler.
+MSVCRTD.lib(delete_scalar.obj) : error LNK2019: ссылка на неразрешенный внешний символ _free_dbg в функции "void __cdecl operator delete(void *)" (??3@YAXPEAX@Z).
+MSVCRTD.lib(pdblkup.obj) : error LNK2019: ссылка на неразрешенный внешний символ _wmakepath_s в функции "int __cdecl GetPdbDllPathFromFilePath(wchar_t const *,wchar_t *,unsigned __int64)" (?GetPdbDllPathFromFilePath@@YAHPEB_WPEA_W_K@Z).
+MSVCRTD.lib(pdblkup.obj) : error LNK2019: ссылка на неразрешенный внешний символ _wsplitpath_s в функции "int __cdecl GetPdbDllPathFromFilePath(wchar_t const *,wchar_t *,unsigned __int64)" (?GetPdbDllPathFromFilePath@@YAHPEB_WPEA_W_K@Z).
+MSVCRTD.lib(pdblkup.obj) : error LNK2019: ссылка на неразрешенный внешний символ wcscpy_s в функции "int __cdecl GetPdbDllPathFromFilePath(wchar_t const *,wchar_t *,unsigned __int64)" (?GetPdbDllPathFromFilePath@@YAHPEB_WPEA_W_K@Z).
+MSVCRTD.lib(pdblkup.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_GetModuleFileNameW в функции "struct HINSTANCE__ * __cdecl GetPdbDll(void)" (?GetPdbDll@@YAPEAUHINSTANCE__@@XZ).
+MSVCRTD.lib(pdblkup.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_GetModuleHandleW в функции "struct HINSTANCE__ * __cdecl GetPdbDll(void)" (?GetPdbDll@@YAPEAUHINSTANCE__@@XZ).
+MSVCRTD.lib(pdblkup.obj) : error LNK2019: ссылка на неразрешенный внешний символ __vcrt_LoadLibraryExW в функции "struct HINSTANCE__ * __cdecl GetPdbDll(void)" (?GetPdbDll@@YAPEAUHINSTANCE__@@XZ).
+MSVCRTD.lib(utility_desktop.obj) : error LNK2019: ссылка на неразрешенный внешний символ terminate в функции __scrt_unhandled_exception_filter.
+MSVCRTD.lib(utility_desktop.obj) : error LNK2019: ссылка на неразрешенный внешний символ __current_exception в функции __scrt_unhandled_exception_filter.
+MSVCRTD.lib(utility_desktop.obj) : error LNK2019: ссылка на неразрешенный внешний символ __current_exception_context в функции __scrt_unhandled_exception_filter.
+C:\Users\DiceLine\Desktop\MyFolder\Сессия\4 семестр\Вычислительные системы, сети и телекоммуникации\asmToBytes\x64\Debug\asmToBytes.exe : fatal error LNK1120: неразрешенных внешних элементов: 72
