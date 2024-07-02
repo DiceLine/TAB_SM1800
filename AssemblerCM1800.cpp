@@ -463,7 +463,7 @@ bool AssemblerCM1800::hasMnemonic(wstring& str) {
 int64_t AssemblerCM1800::hasLabel(wstring& str, int64_t size)
 {
 	int64_t curLen = str.length();
-	if (curLen == 0) return true;
+	if (curLen == 0) return 1;
 	int64_t labLen;
 	for (int64_t k = 0; k < size; ++k) {
 		labLen = labels[k].text.length();
@@ -518,13 +518,14 @@ int AssemblerCM1800::hadCorrectFormat(wstring& str, int64_t size) {
 int AssemblerCM1800::assemble(wstring& mCode) {
 
 	int64_t length = asmCode.length();
-	if (length < INSTR_MIN_LGTH) return -1;
+	if (length < INSTR_MIN_LGTH) return EMT;
 	
 	errorStr.clear();
 	result.clear();
 
+	const int RLT_SIZE = INSTR_QUANTITY / 2;
 	int rltIter = 0, rltSizeCoef = 1;
-	result = vector<SetB>(INSTR_QUANTITY * rltSizeCoef);
+	result = vector<SetB>(RLT_SIZE * rltSizeCoef);
 
 	wstring clearedAsmCode, bufS1, bufS2, bufMsg;
 	bool hadErrorCode = false;
@@ -578,12 +579,13 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 	bool hadNewLine = false, hadAddr = false;
 	bool isAddrAtBegin = true, didnotFind;
 	
-	int64_t i = 0, len = 0, k;
+	int64_t i = 0, len = 0, k, bInt;
 	hadOBody = false;
 	strCounter = 1;
 
-	int labelsIter = 0, labelsSizeCoef = 1;
-	labels = vector<Label>(INSTR_QUANTITY * labelsSizeCoef);
+	const int LABELS_SIZE = 16;
+	int labelsIter = 0, labelsIter2 = 0, labelsSizeCoef = 1;
+	labels = vector<Label>(LABELS_SIZE * labelsSizeCoef);
 
 	// Анализ текста на метки. Определение корректности. Сохранение меток.
 	while (i + len <= length) {
@@ -592,7 +594,7 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 			case L':': {
 				if (len == 0) {
 					bufMsg =
-						string_format(L"Ошибка ввода: Текст метки должен оканчиваться \':\' символом: Код(стр. %lld): %ls",
+						string_format(L"Ошибка ввода: Пустая метка или текст метки не оканчивается \':\' символом: Код(стр. %lld): %ls",
 							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
 					setError(bufMsg, hadErrorCode);
 					++i;
@@ -605,7 +607,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 						string_format(L"Ошибка ввода: Текст метки не должен совпадать с оператором: Код(стр. %lld): %ls",
 							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
 					setError(bufMsg, hadErrorCode);
-					++i;
+					i += len + 1;
+					len = 0;
 					break;
 				}
 
@@ -614,7 +617,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 						string_format(L"Ошибка ввода: Текст метки не должен совпадать с мнемоникой: Код(стр. %lld): %ls",
 							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
 					setError(bufMsg, hadErrorCode);
-					++i;
+					i += len + 1;
+					len = 0;
 					break;
 				}
 
@@ -623,22 +627,28 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 						string_format(L"Ошибка ввода: Текст метки не должен представлять число: Код(стр. %lld): %ls",
 							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
 					setError(bufMsg, hadErrorCode);
-					++i;
+					i += len + 1;
+					len = 0;
 					break;
 				}
-
-				labels[labelsIter].value = startAddress + rltIter;
-				labels[labelsIter++].text = bufS1;
+				
+				if (!hadErrorCode) {
+					if (labelsIter == LABELS_SIZE * labelsSizeCoef) {
+						labels.resize(LABELS_SIZE * ++labelsSizeCoef);
+					}
+					labels[labelsIter++].text = bufS1;
+				}
 
 				i += len + 1;
 				len = 0;
 				break;
 			}
 			case L'\n':
+				++strCounter;
 			case L' ':
 			case L'{':
 			case L'}': {
-				++i;
+				i += len + 1;
 				len = 0;
 				break;
 			}
@@ -654,6 +664,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 	// Определение ошибок
 	// Анализ начального адреса
 	i = 0; len = 0;
+	strCounter = 1;
+
 	while (i + len <= length) {
 		switch (clearedAsmCode[i + len])
 		{
@@ -664,7 +676,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 						string_format(L"Ошибка ввода: Операторы блока должны быть отделены от остального текста: Код(стр. %lld): %ls",
 							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
 					setError(bufMsg, hadErrorCode);
-					++i;
+					i += len + 1;
+					len = 0;
 					break;
 				}
 				++i;
@@ -678,9 +691,12 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 						string_format(L"Ошибка последовательности: Метка должна быть перед инструкцией: Код(стр. %lld): %ls",
 							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
 					setError(bufMsg, hadErrorCode);
-					++i;
+					i += len + 1;
+					len = 0;
 					break;
 				}
+
+				if(!hadErrorCode) labels[labelsIter2++].value = startAddress + rltIter;
 				
 				i += len + 1;
 				len = 0;
@@ -693,7 +709,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 						strCounter, clearedAsmCode.substr(i, len + 1).c_str());
 					setError(bufMsg, hadErrorCode);
 
-					++i;
+					i += len + 1;
+					len = 0;
 					break;
 				}
 				hadNewLine = false;
@@ -749,9 +766,7 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 							if (!hadErrorCode) result[rltIter].address += bufS1;
 							break;
 						case LAB:
-							if (!hadErrorCode) {
-								result[rltIter].address = string_format(L"%04llX", labels[hasLabel(bufS1, labelsIter)].value);
-							}
+							if (!hadErrorCode) result[rltIter].address = bufS1;
 							break;
 						default:
 							bufMsg =
@@ -832,38 +847,41 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					}
 
 					if (!hadErrorCode) {
-						if (rltIter == INSTR_QUANTITY * rltSizeCoef) {
-							++rltSizeCoef;
-							result.resize(INSTR_QUANTITY * rltSizeCoef);
+						if (rltIter == RLT_SIZE * rltSizeCoef) {
+							result.resize(RLT_SIZE * ++rltSizeCoef);
 						}
 						if (hadNewLine) {
-							result[rltIter].command = bufS2;
-							result[rltIter++].index = k;
+							for (k = 0; k < INSTR_QUANTITY; ++k) {
+								if (bufS2.compare(asmTable[k]) == 0) {
+									result[rltIter].command = bufS2;
+									result[rltIter++].index = k;
+									break;
+								}
+							}
 						}
 					}
 
 					firstToken = true;
 
-					if (hadNewLine) ++strCounter;
+					if (hadNewLine) {
+						command.clear();
+						firstToken = false;
+						secondToken = false;
+						++strCounter;
+					}
 				}
 				else {
 					bufS1 = clearedAsmCode.substr(i, len);
 					switch (hadCorrectFormat(bufS1, labelsIter))
 					{
 						case OP:
-							if (!hadErrorCode) {
-								command += bufS1;
-							}
+							if (!hadErrorCode) command += bufS1;
 							break;
 						case NUM:
-							if (!hadErrorCode) {
-								result[rltIter].address += bufS1;
-							}
+							if (!hadErrorCode) result[rltIter].address += bufS1;
 							break;
 						case LAB:
-							if (!hadErrorCode) {
-								result[rltIter].address = string_format(L"%04llX", labels[hasLabel(bufS1, labelsIter)].value);
-							}
+							if (!hadErrorCode) result[rltIter].address = bufS1;
 							break;
 						default:
 							bufMsg =
@@ -916,12 +934,16 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 		return 1;
 	}
 	
-	const int BYTES_IN_LINE = 5;
+	const int BYTES_IN_LINE = 16;
 	wstring machineText;
-
+	
 	for (i = 0, k = 0; i < rltIter; ++i) {
 
 		machineText = machineText + L' ' + machineCodes[result[i].index];
+
+		bInt = hasLabel(result[i].address, labelsIter);
+		if (bInt != EMT && bInt < labelsIter) result[i].address = string_format(L"%04llX", labels[bInt].value);
+
 		len = result[i].address.length();
 		++k;
 

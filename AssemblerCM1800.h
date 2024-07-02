@@ -59,15 +59,6 @@ private:
 		wstring text;
 	};
 
-	enum retCodes {
-		EMT = -1,
-		ERR,
-		NUM,
-		LAB,
-		OP,
-		MNE
-	};
-
 	// Содержимое двух массивов должно совпадать по индексам. Требуется строгое соотвествие.
 	const wchar_t** asmTable;
 	wchar_t** machineCodes;
@@ -80,6 +71,7 @@ private:
 	wstring errorStr;
 	int64_t strCounter = 1, startAddress = 0;
 	bool hadErrWarning;
+
 
 	bool hasNumFormat(wstring& str);
 	bool hasOperandFormat(wstring& str);
@@ -94,6 +86,16 @@ private:
 public:
 	static constexpr const char* BOM = "\xEF\xBB\xBF";
 
+	enum retCodes {
+		EMT = -1,
+		ERR,
+		NUM,
+		LAB,
+		OP,
+		MNE
+	};
+
+	
 	AssemblerCM1800();
 	AssemblerCM1800(const wstring& text);
 	~AssemblerCM1800();
