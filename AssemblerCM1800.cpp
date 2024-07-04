@@ -942,7 +942,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 		machineText = machineText + L' ' + machineCodes[result[i].index];
 
 		bInt = hasLabel(result[i].address, labelsIter);
-		if (bInt != EMT && bInt < labelsIter) result[i].address = string_format(L"%04llX", labels[bInt].value);
+		if (bInt != EMT && result[i].address.length() != 0)
+			result[i].address = string_format(L"%04llX", labels[bInt].value);
 
 		len = result[i].address.length();
 		++k;
