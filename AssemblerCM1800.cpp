@@ -462,12 +462,8 @@ bool AssemblerCM1800::hasMnemonic(wstring& str) {
 
 int64_t AssemblerCM1800::hasLabel(wstring& str, int64_t size)
 {
-	int64_t curLen = str.length();
-	if (curLen == 0) return 1;
-	int64_t labLen;
+	if (str.length() == 0) return 1;
 	for (int64_t k = 0; k < size; ++k) {
-		labLen = labels[k].text.length();
-		if (curLen < labLen) break;
 		if (str.compare(labels[k].text) == 0) return k;
 	}
 	return EMT;
@@ -804,10 +800,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					break;
 				}
 
-				if (!hadNewLine) {
-					++strCounter;
-					hadNewLine = true;
-				}
+				++strCounter;
+				hadNewLine = true;
 			}
 			case L' ': {
 				
