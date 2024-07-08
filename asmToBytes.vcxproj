@@ -24,6 +24,7 @@
     <ProjectGuid>{f1b23c1a-6a58-42b2-ada6-1b8050105e1b}</ProjectGuid>
     <RootNamespace>asmToBytes</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>TATB_SM1800</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
