@@ -44,12 +44,12 @@ private:
 	static const int32_t MAX_ADDR_LENGTH	= 4;
 
 	struct SetA {
-		int32_t index;
+		int64_t index;
 		wstring command;
 	};
 
 	struct SetB {
-		int32_t index;
+		int64_t index;
 		wstring command;
 		wstring address;
 	};

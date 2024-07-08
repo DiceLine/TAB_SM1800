@@ -68,7 +68,7 @@ wstring str_toupper(wstring str) {
 
 bool hasWcsDifProp(wstring& wchStr) {
 	bool isUpper = false, isLower = false;
-	for (int32_t i = 0; i < wchStr.length(); ++i) {
+	for (int64_t i = 0; i < wchStr.length(); ++i) {
 		if (iswupper(wchStr[i])) isUpper = true;
 		else if(iswlower(wchStr[i])) isLower = true;
 	}
@@ -357,7 +357,7 @@ AssemblerCM1800::AssemblerCM1800() {
 
 	wstring str;
 	
-	for (int32_t i = 0, j; i < INSTR_QUANTITY; ++i) {
+	for (int64_t i = 0, j; i < INSTR_QUANTITY; ++i) {
 		str = asmTable[i];
 		for (j = 0; j <= str.length(); ++j) {
 			if (asmTable[i][j] == L' ' || asmTable[i][j] == L'\0') {
@@ -462,7 +462,7 @@ bool AssemblerCM1800::hasMnemonic(wstring& str) {
 
 int64_t AssemblerCM1800::hasLabel(wstring& str, int64_t size)
 {
-	if (str.length() == 0) return 1;
+	if (str.length() == 0) return 0;
 	for (int64_t k = 0; k < size; ++k) {
 		if (str.compare(labels[k].text) == 0) return k;
 	}
@@ -572,7 +572,7 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 	wstring command;
 	
 	bool firstToken = false, secondToken = false;
-	bool hadNewLine = false, hadAddr = false;
+	bool hadNewLine = false, hadBeginAddr = false;
 	bool isAddrAtBegin = true, didnotFind;
 	
 	int64_t i = 0, len = 0, k, bInt;
@@ -661,6 +661,8 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 	// Анализ начального адреса
 	i = 0; len = 0;
 	strCounter = 1;
+	int64_t labelAddressesQnt = 0;
+	bool hadLabelAddr = false;
 
 	while (i + len <= length) {
 		switch (clearedAsmCode[i + len])
@@ -692,7 +694,7 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					break;
 				}
 
-				if(!hadErrorCode) labels[labelsIter2++].value = startAddress + rltIter;
+				if(!hadErrorCode) labels[labelsIter2++].value = rltIter;
 				
 				i += len + 1;
 				len = 0;
@@ -711,7 +713,7 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 				}
 				hadNewLine = false;
 
-				if (hadAddr) {
+				if (hadBeginAddr) {
 					bufMsg =
 					string_format(L"Ошибка адресации: Установка начального адреса возможна только один раз: Код(стр. %lld): %lc",
 					strCounter, clearedAsmCode[i]);
@@ -720,7 +722,7 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					++i;
 					break;
 				}
-				hadAddr = true;
+				hadBeginAddr = true;
 
 				if (!isAddrAtBegin) {
 					bufMsg =
@@ -756,13 +758,18 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					switch (hadCorrectFormat(bufS1, labelsIter))
 					{
 						case OP:
-							if (!hadErrorCode) command += bufS1;
+							if (!hadErrorCode && len != 0)
+								command += bufS1;
 							break;
 						case NUM:
-							if (!hadErrorCode) result[rltIter].address += bufS1;
+							if (!hadErrorCode && len != 0)
+								result[rltIter].address += bufS1;
 							break;
 						case LAB:
-							if (!hadErrorCode) result[rltIter].address = bufS1;
+							if (!hadErrorCode && len != 0) {
+								result[rltIter].address = bufS1;
+								hadLabelAddr = true;
+							}
 							break;
 						default:
 							bufMsg =
@@ -773,6 +780,11 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					}
 					
 					if (!hadErrorCode) {
+						if (hadLabelAddr) {
+							++labelAddressesQnt;
+							hadLabelAddr = false;
+						}
+
 						didnotFind = true;
 						k = 0;
 						do {
@@ -875,7 +887,10 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 							if (!hadErrorCode) result[rltIter].address += bufS1;
 							break;
 						case LAB:
-							if (!hadErrorCode) result[rltIter].address = bufS1;
+							if (!hadErrorCode) {
+								result[rltIter].address = bufS1;
+								hadLabelAddr = true;
+							}
 							break;
 						default:
 							bufMsg =
@@ -927,18 +942,50 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 		mCode = errorStr;
 		return 1;
 	}
-	
+
+	int64_t bInt2;
+	vector<int64_t> labelCounters(labelsIter);
+
+	for (i = 0; i < rltIter; ++i) {
+
+		for (k = 0; k < labelsIter; ++k) {
+
+			if (result[i].address.length() != 0) {
+
+				if (k == 0) {
+					bInt = hasLabel(result[i].address, labelsIter);
+
+					if (bInt != EMT) {
+						bInt2 = 2;
+					}
+					else if (k == 0) {
+						bInt2 = result[i].address.length() / 2;
+					}
+				}
+				
+				if (i < labels[k].value) {
+					labelCounters[k] += bInt2;
+				}
+			}
+		}
+	}
+
 	const int BYTES_IN_LINE = 16;
 	wstring machineText;
-	
+	int64_t addressBytesQuantity;
+
 	for (i = 0, k = 0; i < rltIter; ++i) {
 
 		machineText = machineText + L' ' + machineCodes[result[i].index];
 
 		bInt = hasLabel(result[i].address, labelsIter);
-		if (bInt != EMT && result[i].address.length() != 0)
-			result[i].address = string_format(L"%04llX", labels[bInt].value);
+		len = result[i].address.length();
 
+		if (len != 0 && bInt != EMT) {
+			addressBytesQuantity = startAddress + labelCounters[bInt];
+			result[i].address = string_format(L"%04llX", labels[bInt].value + addressBytesQuantity);
+		}
+		
 		len = result[i].address.length();
 		++k;
 
