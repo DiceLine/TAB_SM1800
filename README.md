@@ -12,6 +12,28 @@ TATB_SM1800 "%USERPROFILE%\Desktop\AsmCode.txt"
 TATB_SM1800 "%USERPROFILE%\Desktop\AsmCode.txt" "%USERPROFILE%\Desktop"
 ```
 
+### In assembler code
+
+You can set:
+<li>Your program's starting address in memory by adding "&HEX_NUM". Used to address labels.
+<li>Labels using ':' and you can refer to them.
+<li>The brackets. It's just for visuality and designed for ease of programming.
+<li>Any indents and separate numeric literals.
+<li>Comments using ';' symbol.
+
+Example:
+```
+;	An example of a translatable assembly program
+{
+	&50 00		; starting address
+	intruction1	; some
+	intruction2	; code
+	JMP INST4	; jump to address
+	intruction3
+INST4:	intruction4
+}
+```
+
 # **Для чего / Wherefore**
 Для русскоязычного читателя есть статьи (Original links):
 
