@@ -1,8 +1,8 @@
-# **About it / Об этом**
+# **About it**
 
-TATB - Translate Assembler To Bytes. It's assembly language translator into machine code for the SM1800 computer.
+TAB - Translate Assembler to Bytes. It's assembly language translator into machine code for the SM1800 computer. This is an implementation of the standard SM-1800 assembler specification with a slight extension.
 
-# **How to use / Как использовать**
+# **How to use**
 
 The program runs in the console. The first parameter is the full path of the file with the assembly code. The second (optional) parameter is the full path to where the machine code is saved. If the second parameter is not specified, the default path is "C:\Users\UserName\Downloads". Exit file has a constant name "mc_CM-1800" and a .txt format.
 
@@ -14,23 +14,31 @@ TATB_SM1800 "%USERPROFILE%\Desktop\AsmCode.txt" "%USERPROFILE%\Desktop"
 
 ### In assembler code
 
+#### Standart specification
+
+* Labels system. Using ':' to set labels and being able to reference them
+* Standard commands that are listed in Section 3. COMMAND OPERATION CODES
+* Strict literal format: no delimiters
+* Comments using ';' symbol.
+* The 'h' or 'H' character at the end of a hexadecimal literal. (optionally)
+
+#### Specification extension
+
 You can set:
 * Your program's starting address in memory by adding "&HEX_NUM". Used to address labels.
-* Labels using ':' and you can refer to them.
 * The brackets. It's just for visuality and designed for ease of programming.
 * Any indents and separate numeric literals.
-* Comments using ';' symbol.
 
 Example:
 ```
-;	An example of a translatable assembly program
+;	An example of a translatable assembly language program similar to the isNotZero() function with a strong simplification
 {
 	&50 00		; starting address
-	intruction1	; some
-	intruction2	; code
-	JMP INST4	; jump to address
-	intruction3
-INST4:	intruction4
+	MVI A, 01h	; some
+	DCR A		; code
+	JZ EXIT		; jump to the address if the result of the last operation is equal to zero
+	MVI A, 01H	; we report that the result is not equal to zero.
+EXIT:	RET
 }
 ```
 
@@ -108,121 +116,135 @@ PC – program counter (two-byte register);
 
 M is a symbol used to designate a RAM cell, and the address of this cell is indicated indirectly - it is contained in a pair of registers H, L.
 
-### 2. BRIEF DESCRIPTION OF COMMANDS
-|Обозначение| 	Описание|
-|:----------|:---		|
-|ADD R|	Сложение содержимого регистра R с содержимым аккумулятора|
-|ADD M| 	Сложение содержимого ячейки памяти с содержимым аккумулятора
-|ADI (B2)|	Сложение непосредственных данных (В2) с содержимым аккумулятора|
-|ADC R|	Сложение содержимого регистра R и аккумулятора|
-|ADC M| 	Сложение содержимого ячейки памяти и аккумулятора|
-|ACI (B2)|	Сложение непосредственных данных (В2) с содержимым аккумулятора|
-|ANA R|	Логическое умножение («И») содержимого регистра R и аккумулятора|
-|ANA M|	Логическое умножение («И») содержимого ячейки памяти и аккумулятора|
-|ANI B2|	Логическое умножение («И») содержимого непосредственных данных (В2) и аккумулятора|
-|CALL (B2)(B3)|	Вызов безусловный, т.е. переход к команде, адрес которой содержится во втором и третьем байтах команды|
-|CC (B2)(B3)|	Вызов по условию: при наличии переноса CY=1 – (по переносу)|
-|CNC (B2)(B3)|	Вызов по условию: при отсутствии переноса CY=0 – (нет переноса)|
-|CZ (B2)(B3)|	Вызов по условию: результат равен нулю Z=1 – (по нулю)|
-|CNZ (B2)(B3)|	Вызов по условию: результат не равен нулю Z=0 – (нет нуля)|
-|CM (B2)(B3)|	Вызов по условию: результат отрицателен S=1 – (по минусу)|
-|CP (B2)(B3)|	Вызов по условию: результат положителен S=0 (по плюсу)|
-|CPE (B2)(B3)|	Вызов по условию: сумма единиц в коде результата четная P=1 – (по четности)|
-|CPO (B2)(B3)|	Вызов по условию: сумма единиц в коде результата нечетная P=0 – (по нечетности)|
-|CMA|	Инвертирование содержимого аккумулятора|
-|CMC|	Инвертирование содержимого флага переноса CY |
-|CMP R|	Сравнение содержимого регистра R и аккумулятора|
-|CMP M| 	Сравнение содержимого ячейки памяти и аккумулятора|
-|CPI (B2)|	Сравнение непосредственных данных (В2) и аккумулятора|
-|DAA|	Преобразование содержимого аккумулятора в BDD (двоично-десятичном коде)|
-|DAD B|	Сложение (В,С) с (H,L)|
-|DAD D|	Сложение (D,E) с (H,L)|
-|DAD H|	Сложение (H,L) с (H,L)|
-|DAD SP|	Сложение  указателя стека (SP) с (H,L)|
-|DCR R|	Отрицательное приращение R|
-|DCR M|	Отрицательное приращение содержимого ячейки памяти|
-|DCX B|	Отрицательное приращение (В,С)|
-|DCX D|	Отрицательное приращение (D,E)|
-|DCX H|	Отрицательное приращение (H,L)|
-|DCX SP|	Отрицательное приращение содержимого указателя стека (SP)|
-|DI|	Запрещение системного прерывания|
-|EI|	Разрешение системного прерывания|
-|HLT|	Останов|
-|IN (B2)|	Ввод данных в аккумулятор из порта, адрес которого определяется содержимым второго байта команды (В2)|
-|INR R|	Положительное приращение (R)|
-|INR M|	Положительное приращение содержимого ячейки памяти|
-|INX B|	Положительное приращение (B,C)|
-|INX D|	Положительное приращение (D,E)|
-|INX H	|Положительное приращение (H,L)|
-|INX SP	|Положительное приращение содержимого указателя стека (SP)|
-|JMP (B2)(B3)|	Переход безусловный к команде, адрес которой содержится во втором и третьем байтах команды|
-|JC (B2)(B3)|	Переход по условию: CY=1 – (по переносу)|
-|JNC (B2)(B3)|	Переход по условию: CY=0 – (нет переноса)|
-|JZ (B2)(B3)|	Переход по условию: Z=1 – (по нулю)|
-|JNZ (B2)(B3)|	Переход по условию: Z=0 – (нет нуля)|
-|JM (B2)(B3)|	Переход по условию: S=1 – (по минусу)|
-|JP (B2)(B3)	|Переход по условию: S=0 (по плюсу)|
-|JPE (B2)(B3)|	Переход по условию: P=1 – (по четности)|
-|JPO (B2)(B3)|	Переход по условию: P=0 – (по нечетности)|
-|LDA (B2)(B3)|	Загрузка аккумулятора содержимым ячейки памяти, адрес которой содержится во втором и третьем байтах команды|
-|LDAX B|	Загрузка аккумулятора содержимым ячейки памяти, адрес которой содержится в регистрах B,C|
-|LDAX D|	Загрузка аккумулятора содержимым ячейки памяти, адрес которой содержится в регистрах D,E|
-|LHLD (B2)(B3)|	Загрузка регистров H,L содержимым ячейки памяти, адрес которой содержится во втором и третьем байтах команды|
-|LXI B, (B2)(B3)|	Загрузка непосредственных данных В2,В3 в регистры B,C|
-|LXI D, (B2)(B3)|	Загрузка непосредственных данных В2,В3 в регистры D,E|
-|LXI H, (B2)(B3)|	Загрузка непосредственных данных В2,В3 в регистры H,L|
-|LXI SP, (B2)(B3)|	Загрузка непосредственных данных В2,В3 в указатель стека SP|
-|MOV R1,R2|	Пересылка содержимого регистра R2 в регистр R1|
-|MOV R,M |	Пересылка содержимого ячейки памяти в регистр R|
-|MOV M,R |	Пересылка содержимого регистра R в ячейку памяти |
-|MVI R, (B2)|	Пересылка непосредственных данных В2 в регистр R|
-|MVI M, (B2)|	Пересылка непосредственных данных В2 в ячейку памяти |
-|ORA R	|Логическое сложение («ИЛИ») содержимого регистра R и аккумулятора|
-|ORA M	|Логическое сложение («ИЛИ») содержимого ячейки памяти и аккумулятора|
-|ORI (B2)|	Логическое сложение («ИЛИ») содержимого непосредственных данных (В2) и аккумулятора|
-|OUT (B2)|	Вывод данных из аккумулятора в порт, адрес которого содержится во втором байте команды В2|
-|PCHL|	Засылка (H,L) в программный счетчик PC |
-|POP B|	Извлечение содержимого регистров B,C из стека|
-|POP D|	Извлечение содержимого регистров D,E из стека|
-|POP H	|Извлечение содержимого регистров H,L из стека|
-|POP PSW|	Извлечение содержимого аккумулятора А и регистра F из стека|
-|PUSH B	|Засылка содержимого регистров B,C в стек|
-|PUSH D	|Засылка содержимого регистров D,E в стек|
-|PUSH H |	Засылка содержимого регистров H,L в стек|
-|PUSH PSW|	Засылка содержимого аккумулятора А и регистра F в стек|
-|RAL	|Циклический сдвиг содержимого аккумулятора влево на один разряд CY в А0,А7 в CY|
-|RAR |Циклический сдвиг содержимого аккумулятора вправо на один разряд CY в А7,А0 в CY|
-|RLC|	Циклический сдвиг содержимого аккумулятора влево на один разряд А7 в А0,А7 в CY|
-|RRC|	Циклический сдвиг содержимого аккумулятора вправо на один разряд А0 в А0,А7 в CY|
-|RET|	Возврат безусловный к команде с адресом, помещенным последним в стек|
-|RC	|Возврат по условию: CY=1 – (по переносу)|
-|RNC|	Возврат по условию: CY=0 – (нет переноса)|
-|RZ	|Возврат по условию: Z=1 – (по нулю)|
-|RNZ|	Возврат по условию: Z=0 – (нет нуля)|
-|RM	|Возврат по условию: S=1 – (по минусу)|
-|RP	|Возврат по условию: S=0 (по плюсу)|
-|RPE|	Возврат по условию: P=1 – (по четности)|
-|RPO|	Возврат по условию: P=0 – (по нечетности)|
-|RST	|Пуск по результатам обработки прерывания|
-|SBB R|	Вычитание из аккумулятора содержимого регистра R с заемом|
-|SBB M|	Вычитание из аккумулятора содержимого ячейки памяти с заемом|
-|SBI (B2)|	Вычитание из аккумулятора непосредственных данных В2 с заемом|
-|SUB R	|Вычитание из аккумулятора содержимого регистра R|
-|SUB M	|Вычитание из аккумулятора содержимого ячейки памяти|
-|SUI (B2)|	Вычитание из аккумулятора непосредственных данных В2|
-|SHLD (B2)(B3)|	Запись (H,L) в память с адресом, который содержится во втором и третьем байтах команды|
-|SPHL|	Засылка (H,L) в указатель стека SP|
-|STA (B2)(B3)|	Запись содержимого аккумулятора  в ячейку памяти, адрес которой содержится во втором и третьем байтах команды|
-|STAX B|	Запись содержимого аккумулятора  в ячейку памяти, адрес которой содержится в регистрах В,С|
-|STAX D|	Запись содержимого аккумулятора  в ячейку памяти, адрес которой содержится в регистрах D,E|
-|STC|	Установка флага переноса в состояние «1»|
-|XRA R|	Сложение по модулю («Исключающее ИЛИ») содержимого регистра R и аккумулятора|
-|XRA M|	Сложение по модулю («Исключающее ИЛИ») содержимого ячейки памяти и аккумулятор а|
-|XRI (B2)|	Сложение по модулю («Исключающее ИЛИ») непосредственных данных В2 и аккумулятора|
-|XCHG|	Обмен содержимым между регистрами D,E и H,L|
-|XTHL|	Обмен содержимым между верхними ячейками стека и регистрами H,L|
+In the description of commands of cyclic shift of the accumulator contents (RAL, RAR, RLC, RRC) the designation AM - bit M of the register A (accumulator) is used, and A0 and A7 are respectively the low and high (sign) bits of the accumulator.
 
-### 3. COMMAND OPERATION CODES 
+When reading the description of commands, the following notations should be taken into account when writing:
+
+B2 - the second byte of the command ( in ADI, ACI, ANI, CPI, CPI, MVI, ORI, SBI, SUI, XRI commands - this is the direct data, in IN and OUT commands - the port address),
+
+B3 - the third byte of the command, usually does not appear independently
+
+( ) - byte content (command, register, memory). Should read:
+* (H) - the contents of the H register,
+* (B) - the contents of the register B,
+* (B2)- the content of the second byte of the command,
+* (M) - the contents of the RAM cell, the address of which is placed in the pair of registers H, L, i.e. the address is (H, L).
+
+### 2. BRIEF DESCRIPTION OF COMMANDS
+| Designation | Description |
+|:----------|:---|
+|ADD R| Adds the contents of the R register to the contents of the accumulator|
+|ADD M| Adds the contents of a memory location to the contents of the accumulator|
+|ADI (B2)| Addition of direct data (B2) to the accumulator content|
+|ADC R| Adding the contents of the R register and the accumulator|
+|ADC M| Adding the contents of the memory location and the accumulator|
+|ACI (B2)| Adding the direct data (B2) to the contents of the accumulator|
+|ANA R| Logical multiplication ("AND") of the contents of register R and accumulator|
+|ANA M| Logical multiplication ("AND") of the contents of the memory location and the accumulator|
+|ANI B2| Logical multiplication ("AND") of the contents of the direct data (B2) and the accumulator|
+|CALL (B2)(B3)| Unconditional call, i.e., a jump to the instruction whose address is contained in the second and third bytes of the instruction|
+|CC (B2)(B3)| Call by condition: if there is a carry CY=1 - (by carry)|
+|CNC (B2)(B3)| Condition call: if there is no transfer CY=0 - (no transfer)|
+|CZ (B2)(B3)| Call by condition: result is zero Z=1 - (zero)|
+|CNZ (B2)(B3)|Condition call: the result is not zero Z=0 - (no zero)|
+|CM (B2)(B3)| Call by condition: the result is negative S=1 - (minus)|
+|CP (B2)(B3)| Call by condition: the result is positive S=0 (plus)|
+|CPE (B2)(B3)| Call by condition: the sum of the units in the result code is even P=1 - (parity)|
+|CPO (B2)(B3)| Condition call: the sum of the units in the result code is odd P=0 - (odd)|
+|CMA| Inverting the contents of the accumulator|
+|CMC| Inverting the content of the CY carry flag |
+|CMP R| Comparing the contents of the R register and the accumulator|
+|CMP M| Comparing the contents of a memory location and the accumulator|
+|CPI (B2)| Comparison of direct data (B2) and accumulator|
+|DAA| Convert the accumulator contents to BDD (Binary Decimal Code)|
+|DAD B| Add (B,C) to (H,L)|
+|DAD D| Adding (D,E) to (H,L)|
+|DAD H| Adding (H,L) to (H,L)|
+|DAD SP| Add stack pointer (SP) to (H,L)|
+|DCR R| Negative increment of R|
+|DCR M| Negative increment of memory location content|
+|DCX B| Negative increment (B,C)|
+|DCX D|Negative increment (D,E)|
+|DCX H| Negative increment (H,L)|
+|DCX SP| Negative increment of stack pointer contents (SP)|
+|DI| System Interrupt Inhibit|
+|EI| Enable system interrupt|
+|HLT| Stop|
+|IN (B2)| Input data into the accumulator from the port whose address is determined by the content of the second byte of the command (B2)|
+|INR R| Positive increment (R)|
+|INR M| Positive increment of the contents of the memory location|
+|INX B| Positive increment (B,C)|
+|INX D| Positive increment (D,E)|
+|INX H|Positive increment (H,L)|
+|INX SP |Positive increment of stack pointer contents (SP)|
+|JMP (B2)(B3)| Unconditional jump to the instruction whose address is contained in the second and third bytes of the instruction|
+|JC (B2)(B3)| Transition by condition: CY=1 - (by carry)|
+|JNC (B2)(B3)| Condition transition: CY=0 - (no carry)|
+|JZ (B2)(B3)| Transition by condition: Z=1 - (zero)|
+|JNZ (B2)(B3)| Condition Transition: Z=0 - (no zero)|
+|JM (B2)(B3)| Condition Transition: S=1 - (minus)|
+|JP (B2)(B3)|Condition transition: S=0 (plus)|
+|JPE (B2)(B3)|Jump by condition: P=1 - (parity)|
+|JPO (B2)(B3)| Condition transition: P=0 - (odd parity)|
+|LDA (B2)(B3)| Load the accumulator with the contents of the memory location whose address is contained in the second and third bytes of the command|
+|LDAX B| Load the accumulator with the contents of the memory location whose address is contained in registers B,C|
+|LDAX D| Load the accumulator with the contents of the memory location whose address is contained in registers D,E|
+|LHLD (B2)(B3)| Load registers H,L with the contents of the memory location whose address is contained in the second and third bytes of the command|
+|LXI B, (B2)(B3)| Load direct data B2,B3 into registers B,C|
+|LXI D, (B2)(B3)| Load direct data B2,B3 into registers D,E|
+|LXI H, (B2)(B3)| Load direct data B2,B3 into registers H,L|
+|LXI SP, (B2)(B3)| Load direct data B2,B3 into stack pointer SP|
+|MOV R1,R2| Send the contents of the register R2 to the register R1|
+|MOV R,M | Send the contents of a memory location to the R register|
+|MOV M,R | Send the contents of register R to memory cell |
+|MVI R, (B2)| Send direct data B2 to register R|
+|MVI M, (B2)| Send direct B2 data to memory location |
+|ORA R |Logical addition ("OR") of the contents of the register R and the accumulator|
+|ORA M |Logical addition (OR) of the contents of the memory location and the accumulator|
+|ORI (B2)| Logical OR addition of the contents of the immediate data (B2) and the accumulator|
+|OUT (B2)| Outputs data from the accumulator to the port whose address is contained in the second byte of the B2 instruction|
+|PCHL| Send (H,L) to the PC program counter |
+|POP B| Retrieve the contents of registers B,C from the stack|
+|POP D| Fetch the contents of registers D,E from the stack|
+|POP H |Fetch the contents of registers H,L from the stack|
+|POP PSW| Retrieve the contents of accumulator A and register F from the stack|
+|PUSH B |Send the contents of registers B,C to the stack|
+|PUSH D |Send the contents of registers D,E to the stack|
+|PUSH H |Send the contents of registers H,L to the stack|
+|PUSH PSW| Send the contents of accumulator A and register F to the stack|
+|RAL |Cyclic shift of the accumulator contents to the left one bit CY to A0,A7 to CY|
+|RAR |Cyclic shift of the accumulator content to the right by one digit CY in A7,A0 in CY|
+|RLC| Cyclic shift of the accumulator content to the left by one digit A7 in A0,A7 in CY|
+|RRC| Cyclic shift of the accumulator content to the right by one digit A0 in A7,A0 in CY|
+|RET| Return unconditional to the instruction with the last address on the stack|
+|RC |Return by condition: CY=1 - (by carry)|
+|RNC| Return by condition: CY=0 - (no carryover)|
+|RZ |Return by condition: Z=1 - (by zero)|
+|RNZ| Return by condition: Z=0 - (no zero)|
+|RM |Return by condition: S=1 - (minus)|
+|RP |Return by condition: S=0 (on the plus side)|
+|RPE| Return by condition: P=1 - (parity)|
+|RPO| Return by condition: P=0 - (odd parity)|
+|RST |Start by results of interrupt processing|
+|SBB R| Subtract the contents of the R register from the accumulator with the offset|
+|SBB M| Subtract from the accumulator the contents of a memory location with a memory location|
+|SBI (B2)| Subtracting from the accumulator the direct data of B2 with a scope|
+|SUB R | Subtract the contents of the R register from the accumulator|
+|SUB M |Subtract the contents of a memory location from the accumulator|
+|SUI (B2)| Subtracting direct data B2 from the accumulator|
+|SHLD (B2)(B3)| Writing (H,L) to memory with the address contained in the second and third bytes of the instruction|
+|SPHL| Sending (H,L) to the SP stack pointer|
+|STA (B2)(B3)| Writing the contents of the accumulator to the memory location whose address is contained in the second and third bytes of the instruction|
+|STAX B| Write the contents of the accumulator in a memory location whose address is contained in registers B,C|
+|STAX D| Write the contents of the accumulator in a memory location whose address is contained in registers D,E|
+|STC| Set the carry flag to the state "1"|
+|XRA R| Modulo addition ("Excluding OR") of the contents of the register R and the accumulator|
+|XRA M| Modulo addition ("Excluding OR") of the contents of the memory location and the accumulator|
+|XRI (B2)| Modulo OR addition of the direct data of B2 and the accumulator|
+|XCHG| Exchange of contents between registers D,E and H,L|
+|XTHL| Exchanging content between the upper stack cells and the H,L registers|
+
+### 3. COMMAND OPERATION CODES
 ```
 00 NOP          40 MOV B,B      80 ADD B      C0 RNZ  
 01 LXI B,XXXX   41 MOV B,C      81 ADD C      C1 POP B  
