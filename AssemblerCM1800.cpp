@@ -662,13 +662,16 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 	i = 0; len = 0;
 	strCounter = 1;
 	int64_t labelAddressesQnt = 0;
-	bool hadLabelAddr = false;
+	bool hadLabelAddr = false, isBeginAddrSet = false;
+	wstring startingAddr;
 
 	while (i + len <= length) {
 		switch (clearedAsmCode[i + len])
 		{
 			case L'{':
 			case L'}': {
+				hadNewLine = false;
+
 				if (len != 0) {
 					bufMsg =
 						string_format(L"Ошибка ввода: Операторы блока должны быть отделены от остального текста: Код(стр. %lld): %ls",
@@ -682,9 +685,9 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 				break;
 			}
 			case L':': {
-				
-				bufS1 = clearedAsmCode.substr(i, len);
-				if (firstToken) {
+				hadNewLine = false;
+
+				if (firstToken || hadBeginAddr && !isBeginAddrSet) {
 					bufMsg =
 						string_format(L"Ошибка последовательности: Метка должна быть перед инструкцией: Код(стр. %lld): %ls",
 							strCounter, clearedAsmCode.substr(i, len + 1).c_str());
@@ -701,6 +704,19 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 				break;
 			}
 			case L'&': {
+				hadNewLine = false;
+
+				if (hadBeginAddr) {
+					bufMsg =
+						string_format(L"Ошибка адресации: Установка начального адреса возможна только один раз: Код(стр. %lld): %lc",
+							strCounter, clearedAsmCode[i]);
+
+					setError(bufMsg, hadErrorCode);
+					++i;
+					break;
+				}
+				hadBeginAddr = true;
+
 				if (len != 0) {
 					bufMsg =
 					string_format(L"Ошибка ввода: Установка начального адреса должна быть на отдельной строке: Код(стр. %lld): %ls", 
@@ -711,18 +727,6 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 					len = 0;
 					break;
 				}
-				hadNewLine = false;
-
-				if (hadBeginAddr) {
-					bufMsg =
-					string_format(L"Ошибка адресации: Установка начального адреса возможна только один раз: Код(стр. %lld): %lc",
-					strCounter, clearedAsmCode[i]);
-
-					setError(bufMsg, hadErrorCode);
-					++i;
-					break;
-				}
-				hadBeginAddr = true;
 
 				if (!isAddrAtBegin) {
 					bufMsg =
@@ -733,25 +737,21 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 				}
 				isAddrAtBegin = false;
 
-				if (i + 1 + 2 * (int64_t)MAX_ADDR_LENGTH <= length) {
-					len = clearedAsmCode.substr(i + 1, 2 * MAX_ADDR_LENGTH).length();
-					for (k = 1; k < 2 * (int64_t)MAX_ADDR_LENGTH; ++k) {
-						bufS1 = clearedAsmCode.substr(i + 1, 2 * (int64_t)MAX_ADDR_LENGTH - k);
-						if (hasNumFormat(bufS1)) {
-							len = bufS1.length();
-							break;
-						}
-					}
-				}
-				
-				if (!hadErrorCode) startAddress = wcstoll(bufS1.c_str(), nullptr, 16);
-
 				i += len + 1;
 				len = 0;
 
 				break;
 			}
 			case L'\n': {
+
+				if (hadBeginAddr && !isBeginAddrSet) {
+					if (!hadErrorCode)
+						startAddress = wcstoll(startingAddr.c_str(), nullptr, 16);
+					isBeginAddrSet = true;
+					i += len + 1;
+					len = 0;
+					break;
+				}
 
 				if (firstToken) {
 					bufS1 = clearedAsmCode.substr(i, len);
@@ -823,63 +823,65 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 				}
 
 				isAddrAtBegin = false;
-				if (!firstToken) {
+				
+				if (!hadBeginAddr || isBeginAddrSet) {
+					if (!firstToken) {
 
-					if (hadNewLine) --strCounter;
-					bufS1 = clearedAsmCode.substr(i, len);
-					if (hasWcsDifProp(bufS1)) {
-						bufMsg =
-						string_format(L"Ошибка ввода: Неизвестная инструкция: Код(стр. %lld): %ls", 
-						strCounter, bufS1.c_str());
+						if (hadNewLine) --strCounter;
+						bufS1 = clearedAsmCode.substr(i, len);
+						if (hasWcsDifProp(bufS1)) {
+							bufMsg =
+								string_format(L"Ошибка ввода: Неизвестная инструкция: Код(стр. %lld): %ls",
+									strCounter, bufS1.c_str());
 
-						setError(bufMsg, hadErrorCode);
+							setError(bufMsg, hadErrorCode);
 
-						i += len + 1;
-						len = 0;
+							i += len + 1;
+							len = 0;
 
-						break;
-					}
-					
-					bufS2 = str_toupper(bufS1);
-					
-					if (hasMnemonic(bufS1)) command += bufS1 + L' ';
-					else if(hasMnemonic(bufS2)) command += bufS2 + L' ';
-					else {
-						bufMsg =
-							string_format(L"Ошибка ввода: Неизвестная инструкция: Код(стр. %lld): %ls",
-								strCounter, bufS1.c_str());
-
-						setError(bufMsg, hadErrorCode);
-					}
-
-					if (!hadErrorCode) {
-						if (rltIter == RLT_SIZE * rltSizeCoef) {
-							result.resize(RLT_SIZE * ++rltSizeCoef);
+							break;
 						}
-						if (hadNewLine) {
-							for (k = 0; k < INSTR_QUANTITY; ++k) {
-								if (bufS2.compare(asmTable[k]) == 0) {
-									result[rltIter].command = bufS2;
-									result[rltIter++].index = k;
-									break;
+
+						bufS2 = str_toupper(bufS1);
+
+						if (hasMnemonic(bufS1)) command += bufS1 + L' ';
+						else if (hasMnemonic(bufS2)) command += bufS2 + L' ';
+						else {
+							bufMsg =
+								string_format(L"Ошибка ввода: Неизвестная инструкция: Код(стр. %lld): %ls",
+									strCounter, bufS1.c_str());
+
+							setError(bufMsg, hadErrorCode);
+						}
+
+						if (!hadErrorCode) {
+							if (rltIter == RLT_SIZE * rltSizeCoef) {
+								result.resize(RLT_SIZE * ++rltSizeCoef);
+							}
+							if (hadNewLine) {
+								for (k = 0; k < INSTR_QUANTITY; ++k) {
+									if (bufS2.compare(asmTable[k]) == 0) {
+										result[rltIter].command = bufS2;
+										result[rltIter++].index = k;
+										break;
+									}
 								}
 							}
 						}
-					}
 
-					firstToken = true;
+						firstToken = true;
 
-					if (hadNewLine) {
-						command.clear();
-						firstToken = false;
-						secondToken = false;
-						++strCounter;
+						if (hadNewLine) {
+							command.clear();
+							firstToken = false;
+							secondToken = false;
+							++strCounter;
+						}
 					}
-				}
-				else {
-					bufS1 = clearedAsmCode.substr(i, len);
-					switch (hadCorrectFormat(bufS1, labelsIter))
-					{
+					else {
+						bufS1 = clearedAsmCode.substr(i, len);
+						switch (hadCorrectFormat(bufS1, labelsIter))
+						{
 						case OP:
 							if (!hadErrorCode) command += bufS1;
 							break;
@@ -898,8 +900,22 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 									strCounter, bufS1.c_str());
 							setError(bufMsg, hadErrorCode);
 							break;
+						}
+						secondToken = true;
 					}
-					secondToken = true;
+				}
+				else if (!hadErrorCode) {
+					bufS1 = clearedAsmCode.substr(i, len);
+					if (hasNumFormat(bufS1)) {
+						startingAddr += bufS1;
+					}
+					else {
+						bufMsg =
+						string_format(L"Ошибка ввода: При указании начального адреса используются только шестнадцатиричные цифры: Код(стр. %lld): %ls",
+							strCounter, bufS1);
+
+						setError(bufMsg, hadErrorCode);
+					}
 				}
 
 				hadNewLine = false;
@@ -909,23 +925,25 @@ int AssemblerCM1800::assemble(wstring& mCode) {
 			}
 			case L',': {
 				hadNewLine = false;
-				if (firstToken) {
-					if (len == 0) {
-						bufMsg =
-						string_format(L"Ошибка ввода: Перед запятой запрещены разделители: Код(стр. %lld): %lc", 
+
+				if (len == 0 || !firstToken || hadBeginAddr && !isBeginAddrSet) {
+					bufMsg =
+						string_format(L"Ошибка ввода: Запятая устанавливается только после операнда: Код(стр. %lld): %lc",
 							strCounter, L',');
 
-						setError(bufMsg, hadErrorCode);
-						++i;
-						break;
-					}
-					bufS1 = clearedAsmCode.substr(i, len);
-					checkOperandFormatWithSetErr(bufS1, hadErrorCode);
-					if (!hadErrorCode) {
-						command += bufS1 + L',';
-					}
-					secondToken = true;
+					setError(bufMsg, hadErrorCode);
+					i += len + 1;
+					len = 0;
+					break;
 				}
+
+				bufS1 = clearedAsmCode.substr(i, len);
+				checkOperandFormatWithSetErr(bufS1, hadErrorCode);
+				if (!hadErrorCode) {
+					command += bufS1 + L',';
+				}
+				secondToken = true;
+
 				i += len + 1;
 				len = 0;
 				break;
