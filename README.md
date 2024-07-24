@@ -8,8 +8,8 @@ The program runs in the console. The first parameter is the full path of the fil
 
 Examples:
 ```
-TATB_SM1800 "%USERPROFILE%\Desktop\AsmCode.txt"
-TATB_SM1800 "%USERPROFILE%\Desktop\AsmCode.txt" "%USERPROFILE%\Desktop"
+TAB_SM1800 "%USERPROFILE%\Desktop\AsmCode.txt"
+TAB_SM1800 "%USERPROFILE%\Desktop\AsmCode.txt" "%USERPROFILE%\Desktop"
 ```
 
 ### In assembler code
