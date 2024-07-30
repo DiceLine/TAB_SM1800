@@ -2,7 +2,37 @@
 
 TAB - Translate Assembler to Bytes. It's assembly language translator into machine code for the SM1800 computer. This is an implementation of the standard SM-1800 assembler specification with a slight extension.
 
-# **How to use**
+# **Getting Started**
+
+## **Dependencies**
+
+* API Win32
+* std libs C++
+* CMake higher 3.12.4
+
+## **Build**
+
+You can build using CMake. One of the popular cross-platform build systems in the C/C++ stack.
+
+Download [CMake](https://cmake.org/download/)
+
+### Build in console:
+1. Create a `build` directory in the root of the repository.
+2. In the directory, run the command `cmake ..`
+3. Run the command `cmake --build .` to create Debug project version or run the command `cmake --build . --config Release` to create the release version.
+4. In `build` directory, a `Debug` or `Release` directory is created with the executable file.
+
+### Build in Visual Studio:
+1. Open the file `TAB_SM1800.sln` in the root of the repository.
+2. Click the green arrow button at the top center of the IDE to build a project.
+
+You can add options to a program by adding an options string:
+1. Press Alt + F7 to enter project properties.
+2. Select Debug tab.
+3. Find a text box to the right of the command arguments option.
+4. Input the required parameters.
+
+## **How to use**
 
 The program runs in the console. The first parameter is the full path of the file with the assembly code. The second (optional) parameter is the full path to where the machine code is saved. If the second parameter is not specified, the default path is "C:\Users\UserName\Downloads". Exit file has a constant name "mc_CM-1800" and a .txt format.
 
